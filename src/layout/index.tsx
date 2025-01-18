@@ -1,14 +1,15 @@
-import React from 'react';
+import { FC } from 'preact/compat';
+
 import Header from './Header';
 import Footer from './Footer';
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Layout: FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div>
+    <>
       <Header />
       <main>{children}</main>
       <Footer />
-    </div>
+    </>
   );
 };
 
