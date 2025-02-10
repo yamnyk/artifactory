@@ -13,6 +13,19 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#app {
+  min-width: 30ch;
+  max-width: 120ch;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 0 2rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
