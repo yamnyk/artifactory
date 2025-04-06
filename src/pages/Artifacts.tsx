@@ -6,6 +6,8 @@ import { useArtifacts } from '@/context/artifacts';
 
 const Artifacts = () => {
   const { artifacts, isLoading } = useArtifacts();
+  console.log('[Artifacts] COMPONENT RENDERED');
+
   return (
     <>
       <Heading>Artifacts</Heading>

@@ -2,14 +2,9 @@ import { FunctionalComponent, h } from 'preact';
 import { Suspense } from 'preact/compat';
 import { useEffect, useState } from 'preact/hooks';
 
-import { routes, RouteConfig, RouteLoaderResult } from './routes';
+import { routes } from './routes';
+import { RouteConfig, MatchedRoute } from './types';
 import { matchPath } from './route-matcher';
-
-interface MatchedRoute {
-  component: FunctionalComponent<any>;
-  data: RouteLoaderResult;
-  children: MatchedRoute | null;
-}
 
 export const Router: FunctionalComponent = () => {
   const [route, setRoute] = useState<MatchedRoute | null>(null);
@@ -40,6 +35,10 @@ const ErrorBoundary: FunctionalComponent<{ error?: string }> = ({ children, erro
 function renderRouteTree(node: MatchedRoute | null): h.JSX.Element | null {
   if (!node) return null;
   const { component: Component, data, children } = node;
+  console.log('[renderRouteTree]', {
+    component: Component?.name,
+    resolved: Component,
+  });
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ErrorBoundary>
@@ -49,30 +48,33 @@ function renderRouteTree(node: MatchedRoute | null): h.JSX.Element | null {
   );
 }
 
-async function matchRoutes(configs: RouteConfig[], path: string): Promise<MatchedRoute | null> {
-  for (const route of configs) {
-    const match = matchPath(route.path, path, route.exact || false);
-    if (!match) continue;
+export async function matchRoutes(routes: RouteConfig[], path: string): Promise<MatchedRoute | null> {
+  const normalizedPath = path.replace(/\/+$/, '') || '/';
 
-    if (route.guard) {
-      const allowed = await route.guard({ pathname: path, params: match.params });
-      if (!allowed) {
-        return {
-          component: () => <div>Access Denied</div>,
-          data: {},
-          children: null,
-        };
-      }
+  for (const route of routes) {
+    const isIndex = 'index' in route && route.index === true;
+
+    if (isIndex) {
+      if (normalizedPath !== '/') continue;
+
+      if (route.guard && !(await route.guard({ pathname: normalizedPath, params: {} }))) continue;
+
+      const data = route.loader ? await route.loader({ params: {} }) : {};
+      return { component: route.component, data, children: null };
     }
 
-    const data = route.loader ? await route.loader({ params: match.params }) : {};
-    const child = route.children ? await matchRoutes(route.children, match.remainingPath) : null;
+    const match = matchPath(route.path, normalizedPath);
+    if (!match) continue;
 
-    return {
-      component: route.component,
-      data,
-      children: child,
-    };
+    const { params, remainingPath } = match;
+
+    if (route.guard && !(await route.guard({ pathname: normalizedPath, params }))) continue;
+
+    const data = route.loader ? await route.loader({ params }) : {};
+    const children = route.children ? await matchRoutes(route.children, remainingPath) : null;
+
+    return { component: route.component, data, children };
   }
+
   return null;
 }

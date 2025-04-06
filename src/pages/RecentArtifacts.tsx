@@ -2,7 +2,6 @@ import { FC, useEffect, useState } from 'preact/compat';
 import { Box, Button } from '@chakra-ui/react';
 
 import { Link } from '@/routing';
-import Layout from '@/layout';
 import { ArtifactsList } from '@/components';
 
 import { ROUTES } from '@/routing/helper';

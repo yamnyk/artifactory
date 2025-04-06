@@ -1,4 +1,4 @@
-import { RouteParams } from './routes';
+import { RouteParams } from './types';
 
 export interface MatchResult {
   params: RouteParams;
