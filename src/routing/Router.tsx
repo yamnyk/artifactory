@@ -5,6 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { routes } from './routes';
 import { RouteConfig, MatchedRoute } from './types';
 import { matchPath } from './route-matcher';
+import { sortRoutes } from './helper';
 
 export const Router: FunctionalComponent = () => {
   const [route, setRoute] = useState<MatchedRoute | null>(null);
@@ -50,30 +51,47 @@ function renderRouteTree(node: MatchedRoute | null): h.JSX.Element | null {
 
 export async function matchRoutes(routes: RouteConfig[], path: string): Promise<MatchedRoute | null> {
   const normalizedPath = path.replace(/\/+$/, '') || '/';
+  routes = sortRoutes(routes);
 
   for (const route of routes) {
-    const isIndex = 'index' in route && route.index === true;
-
-    if (isIndex) {
+    // Handle index route
+    if (route.index) {
       if (normalizedPath !== '/') continue;
 
-      if (route.guard && !(await route.guard({ pathname: normalizedPath, params: {} }))) continue;
+      if (route.guard) {
+        const allowed = await route.guard({ pathname: normalizedPath, params: {} });
+        if (!allowed) continue;
+      }
 
       const data = route.loader ? await route.loader({ params: {} }) : {};
-      return { component: route.component, data, children: null };
+      return {
+        component: route.component,
+        data,
+        children: null,
+      };
     }
+
+    // Skip invalid
+    if (!route.path) continue;
 
     const match = matchPath(route.path, normalizedPath);
     if (!match) continue;
 
     const { params, remainingPath } = match;
 
-    if (route.guard && !(await route.guard({ pathname: normalizedPath, params }))) continue;
+    if (route.guard) {
+      const allowed = await route.guard({ pathname: normalizedPath, params });
+      if (!allowed) continue;
+    }
 
     const data = route.loader ? await route.loader({ params }) : {};
-    const children = route.children ? await matchRoutes(route.children, remainingPath) : null;
+    const children = route.children ? await matchRoutes(sortRoutes(route.children), remainingPath) : null;
 
-    return { component: route.component, data, children };
+    return {
+      component: route.component,
+      data,
+      children,
+    };
   }
 
   return null;

@@ -17,3 +17,18 @@ const sorter = (a: RouteConfig, b: RouteConfig): number => {
 };
 
 export const prioritySortRoutes = (src: RouteConfig[]): RouteConfig[] => src.sort(sorter);
+
+const scoreRoute = (route: RouteConfig): number => {
+  if (route.index) return 0;
+  if (!route.path) return 0;
+
+  const segments = route.path.split('/').filter(Boolean);
+  return segments.reduce((score, segment) => {
+    if (segment.startsWith(':')) return score + 5;
+    if (segment === '*') return score - 999;
+    return score + 10;
+  }, 0);
+};
+
+export const sortRoutes = (routes: RouteConfig[]): RouteConfig[] =>
+  [...routes].sort((a, b) => scoreRoute(b) - scoreRoute(a));
