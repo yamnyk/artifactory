@@ -26,6 +26,7 @@ export interface RouteConfig {
   loader?: (ctx: { params: RouteParams }) => Promise<RouteLoaderResult>;
   children?: RouteConfig[];
   guard?: (ctx: RouteGuardContext) => Promise<boolean> | boolean;
+  exact?: boolean;
 }
 
 export const routes: RouteConfig[] = [
@@ -34,8 +35,9 @@ export const routes: RouteConfig[] = [
     component: Layout,
     children: [
       {
-        path: ROUTES.HOME,
+        path: '/',
         component: RecentArtifacts,
+        exact: true,
       },
       {
         path: ROUTES.ARTIFACTS,

@@ -51,7 +51,7 @@ function renderRouteTree(node: MatchedRoute | null): h.JSX.Element | null {
 
 async function matchRoutes(configs: RouteConfig[], path: string): Promise<MatchedRoute | null> {
   for (const route of configs) {
-    const match = matchPath(route.path, path);
+    const match = matchPath(route.path, path, route.exact || false);
     if (!match) continue;
 
     if (route.guard) {
