@@ -12,11 +12,19 @@ export const sortByDate = (a1: Artifact, a2: Artifact) => {
   return a2Time - a1Time;
 };
 
-export const fetchDetails = async (folderName: string) => {
+export const fetchDetails = async (folderName: string): Promise<Artifact> => {
   const artifactResponse = await fetch(`/artifacts/${folderName}/index.json`);
   if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact: ${folderName}`);
   const artifact = await artifactResponse.json();
   artifact.photo = `/artifacts/${folderName}/pic.jpeg`;
+
+  return artifact;
+};
+
+export const fetchMarkdown = async (id: string): Promise<string> => {
+  const artifactResponse = await fetch(`/artifacts/${id}/index.md`);
+  if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact: ${id}`);
+  const artifact = await artifactResponse.text();
 
   return artifact;
 };
@@ -27,6 +35,10 @@ interface FetchArtifactsProps {
   setIsLoading: Dispatch<StateUpdater<boolean>>;
 }
 
+function isRenderableArtifact(item: any): item is Artifact {
+  return item && typeof item.title === 'string';
+}
+
 export const fetchArtifacts =
   ({ setArtifacts, setError, setIsLoading }: FetchArtifactsProps) =>
   async () => {
@@ -35,7 +47,8 @@ export const fetchArtifacts =
       if (!response.ok) throw new Error('Failed to fetch artifacts index');
 
       const artifactNames: string[] = await response.json();
-      const artifactsData = await Promise.all(artifactNames.map(fetchDetails));
+      const raw = await Promise.all(artifactNames.map(fetchDetails));
+      const artifactsData = raw.filter(Boolean).filter(isRenderableArtifact);
 
       setArtifacts(artifactsData.sort(sortByDate));
     } catch (err: any) {

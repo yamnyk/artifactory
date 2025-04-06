@@ -1,11 +1,12 @@
 import { FC, useEffect, useState } from 'preact/compat';
 import { Box, Button } from '@chakra-ui/react';
 
+import { Link } from '@/routing';
 import Layout from '@/layout';
 import { ArtifactsList } from '@/components';
 
+import { ROUTES } from '@/routing/helper';
 import { useArtifacts } from '@/context/artifacts';
-import { Link } from 'react-router';
 
 interface RecentArtifactsProps {
   limit?: number;
@@ -26,7 +27,7 @@ const RecentArtifacts: FC<RecentArtifactsProps> = ({ limit = 6 }) => {
   }, [error]);
 
   return (
-    <Layout heading="Recent:">
+    <>
       {showError && error && (
         <Box
           position="fixed"
@@ -46,9 +47,9 @@ const RecentArtifacts: FC<RecentArtifactsProps> = ({ limit = 6 }) => {
       {artifacts && <ArtifactsList artifacts={recentArtifacts} isLoading={isLoading} />}
 
       <Button asChild>
-        <Link to="/artifacts">all artifacts</Link>
+        <Link to={ROUTES.ARTIFACTS}>all artifacts</Link>
       </Button>
-    </Layout>
+    </>
   );
 };
 
