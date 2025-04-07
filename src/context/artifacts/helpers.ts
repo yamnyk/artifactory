@@ -30,7 +30,7 @@ export const fetchMarkdown = async (id: string): Promise<string> => {
 
   return artifact.replace(
     /!\[([^\]]*)\]\((\.\/[^\)]+)\)/g,
-    (_, alt, src) => `![${alt}](${import.meta.env.BASE_URL}artifacts/${artifactId}/${src.replace('./', '')})`
+    (_, alt, src) => `![${alt}](${import.meta.env.BASE_URL}artifacts/${id}/${src.replace('./', '')})`
   );
 };
 
