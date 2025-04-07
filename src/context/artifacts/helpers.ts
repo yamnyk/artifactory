@@ -28,7 +28,10 @@ export const fetchMarkdown = async (id: string): Promise<string> => {
   if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact: ${id}`);
   const artifact = await artifactResponse.text();
 
-  return artifact;
+  return artifact.replace(
+    /!\[([^\]]*)\]\((\.\/[^\)]+)\)/g,
+    (_, alt, src) => `![${alt}](${import.meta.env.BASE_URL}artifacts/${artifactId}/${src.replace('./', '')})`
+  );
 };
 
 interface FetchArtifactsProps {
