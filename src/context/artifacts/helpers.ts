@@ -2,6 +2,8 @@ import { StateUpdater, Dispatch } from 'preact/hooks';
 
 import { Artifact } from './index';
 
+const BASE_URL = import.meta.env.BASE_URL || '';
+
 export const sortByDate = (a1: Artifact, a2: Artifact) => {
   const a1Time = new Date(a1.created).getTime();
   const a2Time = new Date(a2.created).getTime();
@@ -13,7 +15,7 @@ export const sortByDate = (a1: Artifact, a2: Artifact) => {
 };
 
 export const fetchDetails = async (folderName: string): Promise<Artifact> => {
-  const artifactResponse = await fetch(`/artifacts/${folderName}/index.json`);
+  const artifactResponse = await fetch(`${BASE_URL}/artifacts/${folderName}/index.json`);
   if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact: ${folderName}`);
   const artifact = await artifactResponse.json();
   artifact.photo = `/artifacts/${folderName}/pic.jpeg`;
@@ -22,7 +24,7 @@ export const fetchDetails = async (folderName: string): Promise<Artifact> => {
 };
 
 export const fetchMarkdown = async (id: string): Promise<string> => {
-  const artifactResponse = await fetch(`/artifacts/${id}/index.md`);
+  const artifactResponse = await fetch(`${BASE_URL}/artifacts/${id}/index.md`);
   if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact: ${id}`);
   const artifact = await artifactResponse.text();
 
@@ -43,7 +45,7 @@ export const fetchArtifacts =
   ({ setArtifacts, setError, setIsLoading }: FetchArtifactsProps) =>
   async () => {
     try {
-      const response = await fetch(`/artifacts/index.json`);
+      const response = await fetch(`${BASE_URL}/artifacts/index.json`);
       if (!response.ok) throw new Error('Failed to fetch artifacts index');
 
       const artifactNames: string[] = await response.json();
