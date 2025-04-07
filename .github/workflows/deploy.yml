@@ -30,6 +30,13 @@ jobs:
       - name: Build
         run: npm run build
 
+      # 🔥 This fixes the "Missing download info" bug
+      - name: Dummy upload to force preload of upload-artifact@v3
+        uses: actions/upload-artifact@v3
+        with:
+          name: preload-fix
+          path: .gitignore
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
