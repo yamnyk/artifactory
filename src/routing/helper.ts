@@ -35,6 +35,8 @@ export const sortRoutes = (routes: RouteConfig[]): RouteConfig[] =>
 
 export const navigate = (path: string) => {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  window.history.pushState({}, '', `${base}${path}`);
+  const normalized = path.startsWith('/') ? path : `/${path}`;
+  const full = `${base}${normalized}`;
+  window.history.pushState({}, '', full);
   window.dispatchEvent(new PopStateEvent('popstate'));
 };
