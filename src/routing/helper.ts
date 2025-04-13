@@ -32,3 +32,9 @@ const scoreRoute = (route: RouteConfig): number => {
 
 export const sortRoutes = (routes: RouteConfig[]): RouteConfig[] =>
   [...routes].sort((a, b) => scoreRoute(b) - scoreRoute(a));
+
+export const navigate = (path: string) => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  window.history.pushState({}, '', `${base}${path}`);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+};

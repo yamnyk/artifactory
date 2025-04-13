@@ -35,5 +35,3 @@ export const routes: RouteConfig[] = [
     ]),
   },
 ];
-
-console.log('[routes]', routes);

@@ -50,7 +50,9 @@ function renderRouteTree(node: MatchedRoute | null): h.JSX.Element | null {
 }
 
 export async function matchRoutes(routes: RouteConfig[], path: string): Promise<MatchedRoute | null> {
-  const normalizedPath = path.replace(/\/+$/, '') || '/';
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const normalizedPath = path.replace(base, '') || '/';
+
   routes = sortRoutes(routes);
 
   for (const route of routes) {
