@@ -29,7 +29,7 @@ export const routes: RouteConfig[] = [
         component: SingleArtifact,
         loader: async ({ params }: { params: RouteParams }) => {
           const data = await fetchMarkdown(params.id);
-          return { artifact: data };
+          return { artifactMarkdown: data };
         },
       },
     ]),

@@ -23,15 +23,22 @@ export const fetchDetails = async (folderName: string): Promise<Artifact> => {
   return artifact;
 };
 
+export const patchMarkdownImagePaths = (md: string, artifactId: string): string => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const prefix = `${base}/artifacts/${artifactId}/`;
+
+  return md.replace(
+    /<img\s+([^>]*?)src=(["'])\.\/([^"']+)\2/g,
+    (_, pre, quote, filename) => `<img ${pre}src=${quote}${prefix}${filename}${quote}`
+  );
+};
+
 export const fetchMarkdown = async (id: string): Promise<string> => {
   const artifactResponse = await fetch(`${BASE_URL}/artifacts/${id}/index.md`);
   if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact: ${id}`);
   const artifact = await artifactResponse.text();
 
-  return artifact.replace(
-    /!\[([^\]]*)\]\((\.\/[^\)]+)\)/g,
-    (_, alt, src) => `![${alt}](${import.meta.env.BASE_URL}artifacts/${id}/${src.replace('./', '')})`
-  );
+  return patchMarkdownImagePaths(artifact, id);
 };
 
 interface FetchArtifactsProps {
