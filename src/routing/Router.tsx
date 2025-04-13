@@ -9,7 +9,7 @@ import { sortRoutes } from './helper';
 
 export const Router: FunctionalComponent = () => {
   const [route, setRoute] = useState<MatchedRoute | null>(null);
-  console.log('[Router] Current route:', window.location.pathname);
+
   useEffect(() => {
     const load = async () => {
       const matched = await matchRoutes(routes, window.location.pathname);
@@ -36,10 +36,7 @@ const ErrorBoundary: FunctionalComponent<{ error?: string }> = ({ children, erro
 function renderRouteTree(node: MatchedRoute | null): h.JSX.Element | null {
   if (!node) return null;
   const { component: Component, data, children } = node;
-  console.log('[renderRouteTree]', {
-    component: Component?.name,
-    resolved: Component,
-  });
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ErrorBoundary>

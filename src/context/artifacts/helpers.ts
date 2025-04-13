@@ -23,6 +23,15 @@ export const fetchDetails = async (folderName: string): Promise<Artifact> => {
   return artifact;
 };
 
+export const patchImagePaths = (artifactId: string): string => {
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  console.log(`base: ${base}`);
+
+  const prefix = `${base}/artifacts/${artifactId}/`;
+
+  return `${prefix}pic.jpeg`;
+};
+
 export const patchMarkdownImagePaths = (md: string, artifactId: string): string => {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const prefix = `${base}/artifacts/${artifactId}/`;

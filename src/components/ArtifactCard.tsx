@@ -2,15 +2,18 @@ import { FC } from 'preact/compat';
 import { Artifact } from '@/context/artifacts';
 import { GridItem, Image, Text, VStack } from '@chakra-ui/react';
 
+import { patchImagePaths } from '@/context/artifacts/helpers';
+
 interface ArtifactCardProps {
   artifact: Artifact;
 }
 
 const ArtifactCard: FC<ArtifactCardProps> = ({ artifact }) => {
   const createdDate = new Date(artifact.created);
+
   return (
-    <GridItem key={artifact.id} p={4} shadow="md" borderWidth="1px" borderRadius="lg">
-      <Image boxSize="100px" src={artifact.photo} alt={artifact.title} />
+    <GridItem p={4} shadow="md" borderWidth="1px" borderRadius="lg">
+      <Image boxSize="100px" src={patchImagePaths(artifact.id)} alt={artifact.title} />
       <VStack align="start" textAlign="left">
         <Text fontWeight="bold" fontSize="lg">
           {artifact.title}
