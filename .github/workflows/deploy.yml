@@ -63,4 +63,3 @@ jobs:
           source: 'dist/**'
           target: '~/yamnyk.site/artifactory/'
           strip_components: 1
-          working-directory: .
