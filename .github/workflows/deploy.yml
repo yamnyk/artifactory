@@ -34,9 +34,8 @@ jobs:
 
       - name: Build for GitHub Pages
         run: |
-          pnpm run build:gh
-          cp dist/index.html dist/404.html
-          mv dist dist-gh
+          NODE_ENV=gh pnpm run build:gh
+          cp dist-gh/index.html dist-gh/404.html
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -44,9 +43,7 @@ jobs:
           path: dist-gh
 
       - name: Build for Ukraine.com.ua
-        run: |
-          pnpm run build
-          mv dist dist-ua
+        run: pnpm run build
 
       - name: Upload Ukraine build
         uses: actions/upload-artifact@v4
@@ -82,7 +79,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: 'dist-ua/**'
           target: '~/yamnyk.site/artifactory/'
-          strip_components: 1
+          strip_components: 0
           rm: true
-          recursive: true
           tar_tmp_path: '/tmp'

@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      outDir: 'dist',
+      outDir: isGh ? 'dist' : 'dist-ua',
       rollupOptions: {
         input: {
           main: 'index.html',
