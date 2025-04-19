@@ -80,9 +80,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: |
-            dist-ua/**
-            dist-ua/.htaccess
+          source: 'dist-ua/**/*,dist-ua/.htaccess'
           target: '~/yamnyk.site/artifactory/'
           strip_components: 1
           rm: true
