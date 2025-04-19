@@ -6,6 +6,7 @@ import { fetchArtifacts } from './helpers';
 
 export interface Artifact {
   id: string;
+  author: string;
   title: string;
   type: null | string;
   created: Date;
