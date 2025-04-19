@@ -58,13 +58,9 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
+      name: production
 
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
       - name: Checkout repo
         uses: actions/checkout@v3
 
@@ -73,6 +69,10 @@ jobs:
         with:
           name: ua-build
           path: dist-ua
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Deploy to Ukraine.com.ua
         uses: appleboy/scp-action@master
@@ -83,3 +83,4 @@ jobs:
           source: 'dist-ua/**'
           target: '~/yamnyk.site/artifactory/'
           strip_components: 1
+          rm: true
