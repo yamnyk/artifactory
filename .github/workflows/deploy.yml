@@ -58,5 +58,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: 'dist/*'
+          source: 'dist/'
           target: '~/yamnyk.site/artifactory/'
+          rm: true
+          strip_components: 1
