@@ -15,24 +15,25 @@ export const sortByDate = (a1: Artifact, a2: Artifact) => {
 };
 
 export const fetchDetails = async (folderName: string): Promise<Artifact> => {
-  const artifactResponse = await fetch(`${BASE_URL}/artifacts/${folderName}/index.json`);
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  const artifactResponse = await fetch(`${BASE_URL}data/${folderName}/index.json`);
   if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact: ${folderName}`);
   const artifact = await artifactResponse.json();
-  artifact.photo = `/artifacts/${folderName}/pic.jpeg`;
+  artifact.photo = `${base}/data/${folderName}/pic.jpeg`;
 
   return artifact;
 };
 
 export const patchImagePaths = (artifactId: string): string => {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  const prefix = `${base}/artifacts/${artifactId}/`;
+  const prefix = `${base}/data/${artifactId}/`;
 
   return `${prefix}pic.jpeg`;
 };
 
 export const patchMarkdownImagePaths = (md: string, artifactId: string): string => {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-  const prefix = `${base}/artifacts/${artifactId}/`;
+  const prefix = `${base}/data/${artifactId}/`;
 
   let imageIndex = 0;
 
@@ -43,7 +44,7 @@ export const patchMarkdownImagePaths = (md: string, artifactId: string): string 
 };
 
 export const fetchMarkdown = async (id: string): Promise<string> => {
-  const artifactResponse = await fetch(`${BASE_URL}artifacts/${id}/index.md`);
+  const artifactResponse = await fetch(`${BASE_URL}data/${id}/index.md`);
 
   if (!artifactResponse.ok) throw new Error(`Failed to fetch artifact's markdown: ${id}`);
   const artifact = await artifactResponse.text();
@@ -65,7 +66,7 @@ export const fetchArtifacts =
   ({ setArtifacts, setError, setIsLoading }: FetchArtifactsProps) =>
   async () => {
     try {
-      const response = await fetch(`${BASE_URL}/artifacts/index.json`);
+      const response = await fetch(`${BASE_URL}data/index.json`);
       if (!response.ok) throw new Error('Failed to fetch artifacts index');
 
       const artifactNames: string[] = await response.json();
