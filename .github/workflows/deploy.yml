@@ -2,8 +2,7 @@ name: Deploy Artifactory
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -12,9 +11,8 @@ permissions:
   id-token: write
 
 jobs:
-  build:
+  deploy_gh:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -42,36 +40,35 @@ jobs:
         with:
           path: dist-gh
 
-      - name: Build for Ukraine.com.ua
-        run: pnpm run build
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        id: deployment
 
-      - name: Upload Ukraine build
-        uses: actions/upload-artifact@v4
-        with:
-          name: ua-build
-          path: dist-ua
-
-  deploy:
-    needs: build
+  deploy_ua:
     runs-on: ubuntu-latest
-    environment:
-      name: production
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Download Ukraine build
-        uses: actions/download-artifact@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          name: ua-build
-          path: dist-ua
+          node-version: 20
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Enable corepack and install pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@8 --activate
 
-      - name: Deploy to Ukraine.com.ua (excluding .htaccess)
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build for Ukraine.com.ua
+        run: |
+          pnpm run build
+          cp .htaccess-template dist-ua/.htaccess
+
+      - name: Deploy to Ukraine.com.ua
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -82,6 +79,3 @@ jobs:
           strip_components: 1
           rm: true
           protocol: scp
-
-      - name: Upload .htaccess manually
-        run: scp dist-ua/.htaccess ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/yamnyk.site/artifactory/.htaccess
