@@ -32,39 +32,45 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build project
+      - name: Build for GitHub Pages
         run: |
-          pnpm run build
+          pnpm run build:gh
           cp dist/index.html dist/404.html
 
-      - name: Upload GitHub Pages artifact
+      - name: Upload GH Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
-      - name: Upload dist for SCP
+      - name: Save GH Pages build (for SCP step)
         uses: actions/upload-artifact@v4
         with:
-          name: dist-artifact
+          name: gh-build
           path: dist
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: production
 
     steps:
-      - name: Download dist artifact
+      - name: Download GH Pages build
         uses: actions/download-artifact@v4
         with:
-          name: dist-artifact
+          name: gh-build
           path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Build for Ukraine.com.ua (overwrite dist)
+        run: |
+          corepack enable
+          corepack prepare pnpm@8 --activate
+          pnpm install
+          pnpm run build
 
       - name: Deploy to Ukraine.com.ua
         uses: appleboy/scp-action@master
