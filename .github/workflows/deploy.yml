@@ -34,7 +34,7 @@ jobs:
 
       - name: Build for GitHub Pages
         run: |
-          NODE_ENV=gh pnpm run build:gh
+          pnpm run build:gh
           cp dist-gh/index.html dist-gh/404.html
 
       - name: Upload GitHub Pages artifact
@@ -71,7 +71,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Deploy to Ukraine.com.ua
+      - name: Deploy to Ukraine.com.ua (excluding .htaccess)
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -79,6 +79,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           source: 'dist-ua/**'
           target: '~/yamnyk.site/artifactory/'
-          strip_components: 0
+          strip_components: 1
           rm: true
           protocol: scp
+
+      - name: Upload .htaccess manually
+        run: scp dist-ua/.htaccess ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:~/yamnyk.site/artifactory/.htaccess
