@@ -1,0 +1,1 @@
+import{u as i,a as t,H as r,A as c,k as e}from"./main-D6qu6kLx.js";const n=()=>{const{artifacts:a,isLoading:s}=i();return t(e,{children:[t(r,{children:"Artifacts"}),t(c,{artifacts:a,isLoading:s})]})};export{n as default};

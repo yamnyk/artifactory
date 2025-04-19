@@ -81,4 +81,4 @@ jobs:
           target: '~/yamnyk.site/artifactory/'
           strip_components: 0
           rm: true
-          tar_tmp_path: '/tmp'
+          protocol: scp
