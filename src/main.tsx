@@ -1,4 +1,3 @@
-import { h, Fragment } from 'preact';
 import 'preact/devtools';
 import 'preact/debug'; // only in dev
 
