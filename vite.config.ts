@@ -12,7 +12,7 @@ export default defineConfig(({ mode }) => {
       viteStaticCopy({
         targets: [
           {
-            src: 'public/_htaccess',
+            src: '.htaccess-template',
             dest: '.', // root of dist/
             rename: '.htaccess',
           },
