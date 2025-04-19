@@ -45,7 +45,7 @@ const RecentArtifacts: FC<RecentArtifactsProps> = ({ limit = 6 }) => {
 
       {artifacts && <ArtifactsList artifacts={recentArtifacts} isLoading={isLoading} />}
 
-      <Button asChild>
+      <Button asChild margin="0 auto">
         <Link to={ROUTES.ARTIFACTS}>all artifacts</Link>
       </Button>
     </>

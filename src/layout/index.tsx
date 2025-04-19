@@ -7,9 +7,9 @@ import Footer from './Footer';
 const Layout: FC<PropsWithChildren & { heading?: string }> = ({ children, heading }) => (
   <>
     <Header />
-    <Flex asChild p="2ch 0" direction="column" gap="2ch" align="center">
+    <Flex asChild p="2ch 0" direction="column" gap="2ch" align="start">
       <main>
-        <Heading>{heading}</Heading>
+        {heading && <Heading>{heading}</Heading>}
         {children}
       </main>
     </Flex>
