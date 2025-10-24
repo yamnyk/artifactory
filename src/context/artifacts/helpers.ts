@@ -37,9 +37,11 @@ export const patchMarkdownImagePaths = (md: string, artifactId: string): string 
 
   let imageIndex = 0;
 
-  return md.replace(/<img\s+([^>]*?)src=(["'])\.\/([^"']+)\2/g, (_, pre, quote, filename) => {
-    const floatSide = imageIndex++ % 2 === 0 ? 'left' : 'right';
-    return `<img style="float: ${floatSide}; margin-${floatSide === 'left' ? 'right' : 'left'}: 1ch; margin-bottom: 0.5ch;" ${pre}src=${quote}${prefix}${filename}${quote}`;
+  return md.replace(/<img\s+([^>]*?)src=(["'])\.\/([^"']+)\2([^>]*)>/g, (_, pre, quote, filename, rest) => {
+    const hasClass = /\bclass\s*=/.test(pre + rest);
+    const floatClass = imageIndex++ % 2 === 0 ? 'float-left' : 'float-right';
+    const classAttr = hasClass ? '' : ` class="${floatClass}"`;
+    return `<img ${pre}src=${quote}${prefix}${filename}${quote}${classAttr}${rest}>`;
   });
 };
 

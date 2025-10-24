@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'preact/compat';
-import { Box, Button } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 
 import { Link } from '@/routing';
 import { ArtifactsList } from '@/components';
@@ -11,7 +11,7 @@ interface RecentArtifactsProps {
   limit?: number;
 }
 
-const RecentArtifacts: FC<RecentArtifactsProps> = ({ limit = 6 }) => {
+const RecentArtifacts: FC<RecentArtifactsProps> = ({ limit = 3 }) => {
   const { artifacts, isLoading, error } = useArtifacts();
   const [showError, setShowError] = useState(false);
 
@@ -43,11 +43,16 @@ const RecentArtifacts: FC<RecentArtifactsProps> = ({ limit = 6 }) => {
         </Box>
       )}
 
-      {artifacts && <ArtifactsList artifacts={recentArtifacts} isLoading={isLoading} />}
+      <Flex width="100%" justifyContent="space-between" alignItems="center">
+        <Text fontSize="2xl" fontWeight="bold">
+          Recent Artifacts:
+        </Text>
+        <Button asChild>
+          <Link to={ROUTES.ARTIFACTS}>all artifacts</Link>
+        </Button>
+      </Flex>
 
-      <Button asChild margin="0 auto">
-        <Link to={ROUTES.ARTIFACTS}>all artifacts</Link>
-      </Button>
+      {artifacts && <ArtifactsList artifacts={recentArtifacts} isLoading={isLoading} />}
     </>
   );
 };

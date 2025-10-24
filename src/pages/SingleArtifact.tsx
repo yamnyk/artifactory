@@ -3,7 +3,7 @@ import Markdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import { Box } from '@chakra-ui/react';
 
-import { chakraMarkdownHeadings } from '@/utils';
+import { chakraMarkdownComponents } from '@/utils';
 
 interface SingleArtifactProps {
   artifactMarkdown: string;
@@ -11,8 +11,8 @@ interface SingleArtifactProps {
 
 const SingleArtifact: FC<SingleArtifactProps> = ({ artifactMarkdown }) => {
   return (
-    <Box className="clearfix">
-      <Markdown components={chakraMarkdownHeadings} rehypePlugins={[rehypeRaw]}>
+    <Box>
+      <Markdown components={chakraMarkdownComponents} rehypePlugins={[rehypeRaw]}>
         {artifactMarkdown}
       </Markdown>
     </Box>

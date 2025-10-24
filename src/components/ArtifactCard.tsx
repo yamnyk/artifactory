@@ -17,7 +17,13 @@ const ArtifactCard: FC<ArtifactCardProps> = ({ artifact }) => {
     <GridItem p={4} shadow="md" borderWidth="1px" borderRadius="lg" asChild>
       <Grid templateColumns="repeat(2, 1fr)" gap={2}>
         <GridItem asChild>
-          <Image height="100%" src={patchImagePaths(artifact.id)} alt={artifact.title} />
+          <Image
+            height="250px"
+            width="100%"
+            src={patchImagePaths(artifact.id)}
+            alt={artifact.title}
+            objectFit="cover"
+          />
         </GridItem>
         <GridItem>
           <VStack align="start" textAlign="left">
@@ -28,7 +34,7 @@ const ArtifactCard: FC<ArtifactCardProps> = ({ artifact }) => {
             </Link>
             {artifact.dedication && (
               <Text fontSize="sm" color="gray.500">
-                {artifact.dedication}
+                to: {artifact.dedication}
               </Text>
             )}
             <Text fontSize="sm">
