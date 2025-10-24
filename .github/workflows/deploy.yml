@@ -75,7 +75,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           source: 'dist-ua/**'
-          target: '~/atrifactory.yamnyk.site/www/'
+          target: '~/artifactory.yamnyk.site/www/'
           strip_components: 1
           rm: true
           protocol: scp
